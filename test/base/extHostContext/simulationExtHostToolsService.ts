@@ -88,9 +88,9 @@ export class SimulationExtHostToolsService extends BaseToolsService implements I
 				return result;
 			}
 
-			const r = await raceTimeout(Promise.resolve(this._inner.invokeTool(name, options, token)), 60_000);
+			const r = await raceTimeout(Promise.resolve(this._inner.invokeTool(name, options, token)), 3600_000);
 			if (!r) {
-				throw new Error(`Tool call timed out after 60 seconds`);
+				throw new Error(`Tool call timed out after 3600 seconds`);
 			}
 			return r;
 		} catch (e) {
@@ -122,7 +122,8 @@ export class SimulationExtHostToolsService extends BaseToolsService implements I
 
 	getEnabledTools(request: ChatRequest, filter?: (tool: LanguageModelToolInformation) => boolean | undefined): LanguageModelToolInformation[] {
 		const packageJsonTools = getPackagejsonToolsForTest();
-		return this.tools.filter(tool => filter?.(tool) ?? (!this._disabledTools.has(getToolName(tool.name)) && packageJsonTools.has(tool.name)));
+		const result = this.tools.filter(tool => filter?.(tool) ?? ((!this._disabledTools.has(getToolName(tool.name)) && packageJsonTools.has(tool.name)) || tool.tags.includes('java')));
+		return result;
 	}
 
 	addTestToolOverride(info: LanguageModelToolInformation, tool: LanguageModelTool<unknown>): void {

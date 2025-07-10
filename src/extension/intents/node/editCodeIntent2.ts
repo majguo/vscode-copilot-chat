@@ -28,7 +28,6 @@ import { ToolName } from '../../tools/common/toolNames';
 import { IToolsService } from '../../tools/common/toolsService';
 import { AgentIntentInvocation } from './agentIntent';
 import { EditCodeIntent, EditCodeIntentOptions } from './editCodeIntent';
-import { getRequestedToolCallIterationLimit } from './toolCallingLoop';
 
 
 const getTools = (instaService: IInstantiationService, request: vscode.ChatRequest): Promise<vscode.LanguageModelToolInformation[]> =>
@@ -77,7 +76,7 @@ export class EditCode2Intent extends EditCodeIntent {
 
 	protected override getIntentHandlerOptions(request: vscode.ChatRequest): IDefaultIntentRequestHandlerOptions | undefined {
 		return {
-			maxToolCallIterations: getRequestedToolCallIterationLimit(request) ?? this.configurationService.getNonExtensionConfig('chat.agent.maxRequests') ?? 15,
+			maxToolCallIterations: 200,
 			temperature: this.configurationService.getConfig(ConfigKey.Internal.AgentTemperature) ?? 0,
 			overrideRequestLocation: ChatLocation.EditingSession,
 		};
