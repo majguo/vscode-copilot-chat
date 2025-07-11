@@ -1,0 +1,7 @@
+[
+	{
+		"question": "/editAgent upgrade this project to Java 21 and Spring Boot 3.2 with tool #generate_upgrade_plan_for_java_project",
+		"stateFile": "./javaupgrade.state.json",
+		"keywords": []
+	}
+]

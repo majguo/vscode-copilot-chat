@@ -1,6 +1,60 @@
 {
 	"version": "0.2.0",
+	"inputs": [
+		{
+            "id": "modelName",
+            "type": "pickString",
+            "description": "Select the model to use for simulation",
+            "options": [
+                "gpt-4.1",
+                "claude-3.7-sonnet",
+				"claude-sonnet-4",
+            ],
+            "default": "claude-3.7-sonnet"
+        },
+        {
+            "id": "javaUpgradeExtensionPath",
+            "type": "promptString",
+            "description": "Path to the Java Upgrade extension file (vsix)",
+        }
+	],
 	"configurations": [
+		{
+      		"name": "Debug Java Upgrade Simulation",
+      		"type": "node",
+      		"request": "launch",
+      		"program": "${workspaceFolder}/dist/simulationMain.js",
+      		"args": [
+      			"--external-scenarios", "./test/javaupgrade",
+      			"--parallelism", "1",
+      			"--sidebar",
+      			"-n", "1",
+      			"--disable-tools=get_errors",
+      			"--install-extension=${input:javaUpgradeExtensionPath}",
+      			"--model", "${input:modelName}",
+      			"--in-extension-host",
+      			"--scenario-workspace-folder",
+      			"--verbose",
+      			"--output", "./test/javaupgrade/out/simulator_output",
+      			"--skip-cache"
+      		],
+      		"skipFiles": [
+      		  	"<node_internals>/**"
+      		],
+      		"sourceMaps": true,
+      		"outFiles": [
+      		  	"${workspaceFolder}/dist/**/*.js"
+      		],
+      		"env": {
+      		  	"NODE_ENV": "development"
+      		},
+      		"console": "integratedTerminal",
+      		"internalConsoleOptions": "neverOpen",
+      		"resolveSourceMapLocations": [
+      		  	"${workspaceFolder}/**",
+      		  	"!**/node_modules/**"
+      		]
+    	},
 		{
 			"type": "extensionHost",
 			"request": "launch",
